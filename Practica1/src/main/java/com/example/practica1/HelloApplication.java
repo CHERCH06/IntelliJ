@@ -1,10 +1,8 @@
 package com.example.practica1;
 
 import javafx.application.Application;
-import javafx.collections.ObservableArray;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -16,11 +14,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.function.UnaryOperator;
 
 public class HelloApplication extends Application {
@@ -28,16 +24,13 @@ public class HelloApplication extends Application {
     FlowPane pane;
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(buildGUI(), 700, 600);
+        Scene scene = new Scene(buildGUI(), 600, 300);
         stage.setTitle("Fracciones");
         stage.setScene(scene);
-        stage.setResizable(false);
         stage.show();
     }
 
     private Parent buildGUI() {
-        VBox vBox = new VBox(10);
-
         txtNum = new TextField();
         txtNum.setPrefWidth(60);
         txtNum.setMaxWidth(60);
@@ -65,8 +58,9 @@ public class HelloApplication extends Application {
         txtNum.setTextFormatter(textFormatter);
         txtDen.setTextFormatter(textFormatter2);
 
-        txtDen.setStyle("-fx-font-size: 15;-fx-alignment: CENTER");
-        txtNum.setStyle("-fx-font-size: 15;-fx-alignment: CENTER");
+        String style = "-fx-font-size: 15;-fx-alignment: CENTER";
+        txtDen.setStyle(style);
+        txtNum.setStyle(style);
 
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(5);
@@ -90,14 +84,32 @@ public class HelloApplication extends Application {
             }
         });
 
-        HBox hBox2 = new HBox();
-        hBox2.getChildren().addAll(btncalcular,lblespacio,btnreset);
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(btncalcular,lblespacio,btnreset);
 
         pane = new FlowPane();
         initPane();
 
-        vBox.setAlignment(Pos.CENTER_LEFT);
-        vBox.getChildren().addAll(txtNum,rectangle,txtDen,hBox2,pane);
+        Label lbligual = new Label("=");
+        lbligual.setPadding(new Insets(40));
+        lbligual.setStyle("-fx-font-size: 25; -fx-alignment: CENTER");
+
+        VBox vBox = new VBox(10);
+
+        VBox vBox1 = new VBox();
+        vBox1.getChildren().addAll(txtNum,rectangle,txtDen);
+
+        HBox hBox1 = new HBox();
+        hBox1.getChildren().addAll(vBox1,lbligual,pane);
+
+        HBox hBox2 = new HBox();
+        hBox2.getChildren().addAll(btncalcular,lblespacio,btnreset);
+
+        HBox hBox3 = new HBox();
+        hBox3.getChildren().addAll(vBox1,hBox1);
+
+        vBox.setAlignment(Pos.TOP_LEFT);
+        vBox.getChildren().addAll(hBox3,hBox2);
         vBox.setPadding(new Insets(15));
 
         return vBox;
@@ -112,7 +124,8 @@ public class HelloApplication extends Application {
         lbl1.setMaxWidth(150);
         lbl1.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #000000");
         pane.getChildren().add(lbl1);
-        pane.setAlignment(Pos.CENTER);
+        pane.setAlignment(Pos.CENTER_LEFT);
+        //pane.setPadding(new Insets(10));
     }
 
     private void valida() {
@@ -145,20 +158,20 @@ public class HelloApplication extends Application {
         pane.getChildren().clear();
 
         for (int i = 0; i < num; i++) {
-            Rectangle rectangle = createColoredRectangle(Color.BLUE,30,new Insets(5));
+            Rectangle rectangle = createColoredRectangle(Color.CYAN, new Insets(10));
             pane.getChildren().add(rectangle);
         }
 
         // Crear los cuadros para representar las partes restantes de la fracción
-        for (int i = 0; i < den - num; i++) {
-            Rectangle rectangle = createColoredRectangle(Color.WHITE,30,new Insets(5));
+        for (int i = num; i < den; i++) {
+            Rectangle rectangle = createColoredRectangle(Color.WHITE, new Insets(10));
             pane.getChildren().add(rectangle);
         }
 
     }
 
-    private Rectangle createColoredRectangle(Color color, double size, Insets padding) {
-        Rectangle rectangle = new Rectangle(size, size); // Tamaño del cuadro
+    private Rectangle createColoredRectangle(Color color, Insets padding) {
+        Rectangle rectangle = new Rectangle(30, 30); // Tamaño del cuadro
         rectangle.setFill(color);
         rectangle.setStroke(Color.BLACK);
 
